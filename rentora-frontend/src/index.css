@@ -1,0 +1,129 @@
+:root {
+  /* Color: ink navy structure, brass for anything money/deposit, teal for settled/success,
+     rust for disputes/danger. Named after their role, not their hex, so usage stays intentional. */
+  --ink-900: #12213d;
+  --ink-700: #1f2f52;
+  --ink-500: #48577a;
+  --ink-100: #e7eaf1;
+
+  --paper: #f6f4ef;
+  --paper-raised: #ffffff;
+
+  --brass-600: #a97a2c;
+  --brass-500: #c9932e;
+  --brass-100: #f3e3c2;
+
+  --teal-600: #1f6357;
+  --teal-500: #2f7a6e;
+  --teal-100: #dcece8;
+
+  --rust-600: #9c332c;
+  --rust-500: #c1443c;
+  --rust-100: #f5dcda;
+
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --radius: 10px;
+  --radius-lg: 16px;
+  --shadow: 0 1px 2px rgba(18, 33, 61, 0.06), 0 4px 14px rgba(18, 33, 61, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink-900);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0 0 0.4em;
+  letter-spacing: -0.01em;
+}
+h1 { font-size: 28px; }
+h2 { font-size: 20px; }
+h3 { font-size: 16px; }
+
+a { color: var(--ink-700); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button, input, select, textarea { font-family: inherit; font-size: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--brass-500);
+  outline-offset: 2px;
+}
+
+.app-shell {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px 64px;
+}
+
+.card {
+  background: var(--paper-raised);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: var(--radius);
+  padding: 9px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.btn:hover { opacity: 0.88; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary { background: var(--ink-900); color: var(--paper); }
+.btn-brass { background: var(--brass-500); color: var(--ink-900); }
+.btn-teal { background: var(--teal-500); color: var(--paper); }
+.btn-rust { background: var(--rust-500); color: var(--paper); }
+.btn-ghost { background: transparent; color: var(--ink-700); border: 1px solid var(--ink-100); }
+
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.field label { font-size: 13px; font-weight: 500; color: var(--ink-500); }
+.field input, .field select, .field textarea {
+  border: 1px solid var(--ink-100);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  background: var(--paper-raised);
+  color: var(--ink-900);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 2px solid var(--brass-500);
+  outline-offset: 0;
+  border-color: transparent;
+}
+
+.error-text { color: var(--rust-600); font-size: 13px; margin-top: 2px; }
+
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 18px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--ink-500);
+}
+
+@media (max-width: 640px) {
+  h1 { font-size: 22px; }
+  .app-shell { padding: 0 14px 48px; }
+}
