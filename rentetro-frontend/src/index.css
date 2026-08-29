@@ -24,9 +24,41 @@
   --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-  --radius: 10px;
+   --radius: 10px;
   --radius-lg: 16px;
   --shadow: 0 1px 2px rgba(18, 33, 61, 0.06), 0 4px 14px rgba(18, 33, 61, 0.06);
+}
+
+[data-mode='dark'] {
+  --ink-900: #eef1f7;
+  --ink-700: #b9c3d9;
+  --ink-500: #8b96b3;
+  --ink-100: #22304d;
+
+  --paper: #0d1526;
+  --paper-raised: #16233d;
+
+  --brass-600: #e0aa4c;
+  --brass-500: #d9a13f;
+  --brass-100: #3a2c12;
+
+  --teal-600: #4fae9c;
+  --teal-500: #34897b;
+  --teal-100: #16302b;
+
+  --rust-600: #e17872;
+  --rust-500: #cf5049;
+  --rust-100: #3a1f1c;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+body {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.card, .btn, input, select, textarea {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
 }
 
 * { box-sizing: border-box; }

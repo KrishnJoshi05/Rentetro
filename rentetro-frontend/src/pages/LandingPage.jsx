@@ -11,8 +11,8 @@ export default function LandingPage() {
         }}
       >
         <div style={{ maxWidth: 620 }}>
-          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--brass-600)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-            Rent anything. Deposit held, not lost.
+          <span style={{ fontSize: 14, fontWeight: 900, letterSpacing: '0.03em', textTransform: 'uppercase' }}>
+            Rent assests, secure Deposits, feel free to use.
           </span>
           <h1 style={{ fontSize: 40, marginTop: 10, marginBottom: 14 }}>
             Borrow what you need. List what you don't.
