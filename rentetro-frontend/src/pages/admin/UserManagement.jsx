@@ -18,6 +18,12 @@ export default function UserManagement() {
     load();
   };
 
+  const unsuspend = async (id) => {
+    if (!window.confirm('Unsuspend this user? They will be able to log in.')) return;
+    await api.put(`/admin/users/${id}/unsuspend`);
+    load();
+  };
+
   if (loading) return <div className="app-shell" style={{ paddingTop: 32 }}>Loading…</div>;
 
   return (
@@ -46,6 +52,9 @@ export default function UserManagement() {
                 <td style={{ padding: '10px 16px' }}>
                   {!u.isSuspended && u.role !== 'admin' && (
                     <button className="btn btn-ghost" onClick={() => suspend(u._id)}>Suspend</button>
+                  )}
+                  {u.isSuspended && u.role !== 'admin' && (
+                    <button className="btn btn-ghost" onClick={() => unsuspend(u._id)}>Unsuspend</button>
                   )}
                 </td>
               </tr>

@@ -18,6 +18,7 @@ async function createAdmin() {
     existing.password = ADMIN_PASSWORD;
     existing.role = 'admin';
     existing.isSuspended = false;
+    existing.isEmailVerified = true;
     await existing.save();
     console.log(`Admin account updated: ${ADMIN_EMAIL}`);
   } else {
@@ -26,6 +27,7 @@ async function createAdmin() {
       email: ADMIN_EMAIL,
       password: ADMIN_PASSWORD,
       role: 'admin',
+      isEmailVerified: true,
     });
     console.log(`Admin account created: ${ADMIN_EMAIL}`);
   }

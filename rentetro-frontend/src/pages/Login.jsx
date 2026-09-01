@@ -48,11 +48,11 @@ export default function Login() {
           {touched && !form.password && <span className="error-text">Enter your password</span>}
         </div>
         {error && <div className="error-text" style={{ marginBottom: 12 }}>{error}</div>}
-        <button className="btn btn-primary" type="submit" disabled={loading} style={{ width: '100%' }}>
+        <button className="btn btn-primary" type="submit" disabled={loading} style={{ width: 'auto' , marginLeft: 133 }}>
           {loading ? 'Logging in…' : 'Log in'}
         </button>
       </form>
-      <p style={{ marginTop: 14, fontSize: 14, color: 'var(--ink-500)' }}>
+      <p style={{ marginTop: 14, marginLeft: 133, fontSize: 14, color: 'var(--ink-500)' }}>
         No account? <Link to="/register">Sign up</Link>
       </p>
     </div>

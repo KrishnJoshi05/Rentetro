@@ -11,7 +11,10 @@ const userSchema = new mongoose.Schema(
       enum: ['admin', 'renter', 'consumer'],
       default: 'consumer',
     },
-    isSuspended: { type: Boolean, default: false },
+        isSuspended: { type: Boolean, default: false },
+    isEmailVerified: { type: Boolean, default: false },
+    emailVerificationToken: { type: String },
+    emailVerificationExpires: { type: Date },
     rating: { type: Number, default: 0 }, // average rating as a renter
     ratingCount: { type: Number, default: 0 },
   },

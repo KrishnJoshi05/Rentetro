@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-
-const ROLE_HOME = { renter: '/renter/listings', consumer: '/my-bookings' };
 
 export default function Register() {
   const { register, loading, error } = useAuth();
-  const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'consumer' });
   const [touched, setTouched] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,12 +14,27 @@ export default function Register() {
     if (!form.name || !form.email || form.password.length < 6) return;
 
     try {
-      const user = await register(form);
-      navigate(ROLE_HOME[user.role] || '/');
+      await register(form);
+      setSubmitted(true);
     } catch {
       // error already captured in auth context
     }
   };
+
+  if (submitted) {
+    return (
+      <div className="app-shell" style={{ maxWidth: 420, paddingTop: 56 }}>
+        <div className="card" style={{ textAlign: 'center' }}>
+          <h2>Check your email</h2>
+          <p style={{ color: 'var(--ink-500)', marginBottom: 16 }}>
+            We sent a verification link to <strong>{form.email}</strong>. Click it to activate your
+            account, then come back and log in.
+          </p>
+          <Link to="/login" className="btn btn-primary">Go to login</Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-shell" style={{ maxWidth: 420, paddingTop: 56 }}>

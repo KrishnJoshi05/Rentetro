@@ -10,10 +10,12 @@ export function AuthProvider({ children }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [needsVerification, setNeedsVerification] = useState(false);
 
   const login = useCallback(async (email, password) => {
     setLoading(true);
     setError('');
+    setNeedsVerification(false);
     try {
       const { data } = await api.post('/auth/login', { email, password });
       localStorage.setItem('rentora_token', data.token);
@@ -21,6 +23,7 @@ export function AuthProvider({ children }) {
       setUser(data.user);
       return data.user;
     } catch (err) {
+      if (err.response?.data?.needsVerification) setNeedsVerification(true);
       setError(err.response?.data?.message || 'Login failed.');
       throw err;
     } finally {
@@ -28,21 +31,29 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // No auto-login here anymore — the account needs email verification first.
   const register = useCallback(async (payload) => {
     setLoading(true);
     setError('');
     try {
       const { data } = await api.post('/auth/register', payload);
-      localStorage.setItem('rentora_token', data.token);
-      localStorage.setItem('rentora_user', JSON.stringify(data.user));
-      setUser(data.user);
-      return data.user;
+      return data; // { message }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed.');
       throw err;
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  const verifyEmail = useCallback(async (token) => {
+    const { data } = await api.get(`/auth/verify-email/${token}`);
+    return data;
+  }, []);
+
+  const resendVerification = useCallback(async (email) => {
+    const { data } = await api.post('/auth/resend-verification', { email });
+    return data;
   }, []);
 
   const logout = useCallback(() => {
@@ -52,7 +63,9 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading, error }}>
+    <AuthContext.Provider
+      value={{ user, login, register, logout, verifyEmail, resendVerification, loading, error, needsVerification }}
+    >
       {children}
     </AuthContext.Provider>
   );

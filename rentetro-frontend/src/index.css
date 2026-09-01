@@ -59,7 +59,7 @@ body {
 .card, .btn, input, select, textarea {
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-}
+
 
 * { box-sizing: border-box; }
 
@@ -158,4 +158,38 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; }
 @media (max-width: 640px) {
   h1 { font-size: 22px; }
   .app-shell { padding: 0 14px 48px; }
+}
+@keyframes slide-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.category-track {
+  display: flex;
+  width: max-content;
+  animation: slide-left 18s linear infinite;
+}
+
+.category-track:hover {
+  animation-play-state: paused;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-fade {
+  animation: page-fade-in 0.35s ease;
+}
+
+.card-link {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 6px rgba(18, 33, 61, 0.08), 0 10px 24px rgba(18, 33, 61, 0.1);
 }

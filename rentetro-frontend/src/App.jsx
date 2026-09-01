@@ -1,6 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import VerifyEmail from './pages/VerifyEmail';
 
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
@@ -17,37 +18,44 @@ import IncomingBookings from './pages/renter/IncomingBookings';
 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PendingListings from './pages/admin/PendingListings';
+import ApprovedListings from './pages/admin/ApprovedListings';
 import UserManagement from './pages/admin/UserManagement';
 import DisputeResolution from './pages/admin/DisputeResolution';
 
 export default function App() {
+  const location = useLocation();
+
   return (
     <>
       <Navbar />
-      <Routes>
-        {/* Public */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/listings" element={<ListingsBrowse />} />
-        <Route path="/listings/:id" element={<ListingDetail />} />
+      <div key={location.pathname} className="page-fade">
+        <Routes>
+          {/* Public */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/listings" element={<ListingsBrowse />} />
+          <Route path="/listings/:id" element={<ListingDetail />} />
+          <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
-        {/* Consumer */}
-        <Route path="/my-bookings" element={<ProtectedRoute roles={['consumer']}><MyBookings /></ProtectedRoute>} />
-        <Route path="/my-bookings/:id" element={<ProtectedRoute roles={['consumer']}><BookingDetail /></ProtectedRoute>} />
+          {/* Consumer */}
+          <Route path="/my-bookings" element={<ProtectedRoute roles={['consumer']}><MyBookings /></ProtectedRoute>} />
+          <Route path="/my-bookings/:id" element={<ProtectedRoute roles={['consumer']}><BookingDetail /></ProtectedRoute>} />
 
-        {/* Renter */}
-        <Route path="/renter/listings" element={<ProtectedRoute roles={['renter']}><MyListings /></ProtectedRoute>} />
-        <Route path="/renter/listings/new" element={<ProtectedRoute roles={['renter']}><CreateEditListing /></ProtectedRoute>} />
-        <Route path="/renter/listings/:id/edit" element={<ProtectedRoute roles={['renter']}><CreateEditListing /></ProtectedRoute>} />
-        <Route path="/renter/bookings" element={<ProtectedRoute roles={['renter']}><IncomingBookings /></ProtectedRoute>} />
+          {/* Renter */}
+          <Route path="/renter/listings" element={<ProtectedRoute roles={['renter']}><MyListings /></ProtectedRoute>} />
+          <Route path="/renter/listings/new" element={<ProtectedRoute roles={['renter']}><CreateEditListing /></ProtectedRoute>} />
+          <Route path="/renter/listings/:id/edit" element={<ProtectedRoute roles={['renter']}><CreateEditListing /></ProtectedRoute>} />
+          <Route path="/renter/bookings" element={<ProtectedRoute roles={['renter']}><IncomingBookings /></ProtectedRoute>} />
 
-        {/* Admin */}
-        <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/admin/listings" element={<ProtectedRoute roles={['admin']}><PendingListings /></ProtectedRoute>} />
-        <Route path="/admin/users" element={<ProtectedRoute roles={['admin']}><UserManagement /></ProtectedRoute>} />
-        <Route path="/admin/disputes" element={<ProtectedRoute roles={['admin']}><DisputeResolution /></ProtectedRoute>} />
-      </Routes>
+          {/* Admin */}
+          <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/listings" element={<ProtectedRoute roles={['admin']}><PendingListings /></ProtectedRoute>} />
+          <Route path="/admin/listings/approved" element={<ProtectedRoute roles={['admin']}><ApprovedListings /></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute roles={['admin']}><UserManagement /></ProtectedRoute>} />
+          <Route path="/admin/disputes" element={<ProtectedRoute roles={['admin']}><DisputeResolution /></ProtectedRoute>} />
+        </Routes>
+      </div>
     </>
   );
 }

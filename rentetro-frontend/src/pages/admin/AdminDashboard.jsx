@@ -34,6 +34,7 @@ export default function AdminDashboard() {
 
       <div style={{ display: 'flex', gap: 12 }}>
         <Link to="/admin/listings" className="btn btn-primary">Review pending listings</Link>
+        <Link to="/admin/listings/approved" className="btn btn-teal">Manage approved listings</Link>
         <Link to="/admin/disputes" className="btn btn-rust">Resolve disputes</Link>
         <Link to="/admin/users" className="btn btn-ghost">Manage users</Link>
       </div>

@@ -33,6 +33,53 @@ router.put('/listings/:id/reject', async (req, res) => {
   res.json(listing);
 });
 
+// GET /api/admin/listings/approved
+router.get('/listings/approved', async (req, res) => {
+  const listings = await Listing.find({ status: { $in: ['approved', 'paused'] } }).populate('renter', 'name email');
+  res.json(listings);
+});
+
+// PUT /api/admin/listings/:id/edit
+router.put('/listings/:id/edit', async (req, res) => {
+  try {
+    const { title, description, category, pricePerDay, depositAmount } = req.body;
+    const listing = await Listing.findByIdAndUpdate(
+      req.params.id,
+      { title, description, category, pricePerDay, depositAmount },
+      { new: true }
+    );
+    if (!listing) return res.status(404).json({ message: 'Listing not found.' });
+    res.json(listing);
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to edit listing.', error: err.message });
+  }
+});
+
+// DELETE /api/admin/listings/:id
+router.delete('/listings/:id', async (req, res) => {
+  try {
+    const listing = await Listing.findByIdAndDelete(req.params.id);
+    if (!listing) return res.status(404).json({ message: 'Listing not found.' });
+    res.json({ message: 'Listing deleted successfully.', id: listing._id });
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to delete listing.', error: err.message });
+  }
+});
+
+// PUT /api/admin/listings/:id/pause
+router.put('/listings/:id/pause', async (req, res) => {
+  const listing = await Listing.findByIdAndUpdate(req.params.id, { status: 'paused' }, { new: true });
+  if (!listing) return res.status(404).json({ message: 'Listing not found.' });
+  res.json(listing);
+});
+
+// PUT /api/admin/listings/:id/unpause
+router.put('/listings/:id/unpause', async (req, res) => {
+  const listing = await Listing.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
+  if (!listing) return res.status(404).json({ message: 'Listing not found.' });
+  res.json(listing);
+});
+
 // GET /api/admin/users
 router.get('/users', async (req, res) => {
   const users = await User.find().select('-password');
@@ -42,6 +89,13 @@ router.get('/users', async (req, res) => {
 // PUT /api/admin/users/:id/suspend
 router.put('/users/:id/suspend', async (req, res) => {
   const user = await User.findByIdAndUpdate(req.params.id, { isSuspended: true }, { new: true });
+  if (!user) return res.status(404).json({ message: 'User not found.' });
+  res.json({ id: user._id, isSuspended: user.isSuspended });
+});
+
+// PUT /api/admin/users/:id/unsuspend
+router.put('/users/:id/unsuspend', async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, { isSuspended: false }, { new: true });
   if (!user) return res.status(404).json({ message: 'User not found.' });
   res.json({ id: user._id, isSuspended: user.isSuspended });
 });
@@ -100,6 +154,21 @@ router.get('/dashboard/stats', async (req, res) => {
     totalListings,
     totalRentRevenue: capturedPayments[0]?.total || 0,
   });
+});
+
+// DELETE /api/admin/bookings/:id
+router.delete('/bookings/:id', async (req, res) => {
+  try {
+    const booking = await Booking.findByIdAndDelete(req.params.id);
+    if (!booking) return res.status(404).json({ message: 'Booking not found.' });
+    
+    // Also delete related payments
+    await Payment.deleteMany({ booking: booking._id });
+    
+    res.json({ message: 'Booking deleted successfully.', id: booking._id });
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to delete booking.', error: err.message });
+  }
 });
 
 module.exports = router;
