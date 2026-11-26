@@ -2,6 +2,9 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import VerifyEmail from './pages/VerifyEmail';
+import VerifyIdentity from './pages/verifyaadhar';
+import Inbox from './pages/Inbox';
+import Chat from './pages/Chat';
 
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
@@ -37,7 +40,11 @@ export default function App() {
           <Route path="/listings" element={<ListingsBrowse />} />
           <Route path="/listings/:id" element={<ListingDetail />} />
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
-
+          <Route path="/verify-aadhar" element={<VerifyIdentity />} />
+          <Route path="/verify-identity" element={<VerifyIdentity />} />
+                    {/* Messaging (renter + consumer) */}
+          <Route path="/messages" element={<ProtectedRoute roles={['renter', 'consumer']}><Inbox /></ProtectedRoute>} />
+          <Route path="/messages/:id" element={<ProtectedRoute roles={['renter', 'consumer']}><Chat /></ProtectedRoute>} />
           {/* Consumer */}
           <Route path="/my-bookings" element={<ProtectedRoute roles={['consumer']}><MyBookings /></ProtectedRoute>} />
           <Route path="/my-bookings/:id" element={<ProtectedRoute roles={['consumer']}><BookingDetail /></ProtectedRoute>} />

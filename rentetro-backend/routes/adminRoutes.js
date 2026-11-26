@@ -5,22 +5,51 @@ const Booking = require('../models/Booking');
 const Dispute = require('../models/Dispute');
 const Payment = require('../models/Payment');
 const { authenticate, authorize } = require('../middleware/auth');
+const { decryptAadhaar } = require('../utils/aadhar');
 
 router.use(authenticate, authorize('admin'));
 
 // GET /api/admin/listings/pending
 router.get('/listings/pending', async (req, res) => {
-  const listings = await Listing.find({ status: 'pending' }).populate('renter', 'name email');
-  res.json(listings);
+  try {
+    const listings = await Listing.find({ status: 'pending' }).populate('renter', 'name email');
+    res.json(listings);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to load pending listings.', error: err.message });
+  }
 });
 
 // PUT /api/admin/listings/:id/approve
 router.put('/listings/:id/approve', async (req, res) => {
-  const listing = await Listing.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
-  if (!listing) return res.status(404).json({ message: 'Listing not found.' });
-  res.json(listing);
+  try {
+    const listing = await Listing.findByIdAndUpdate(
+      req.params.id,
+      { $set: { status: 'approved' }, $unset: { rejectionReason: 1 } },
+      { new: true }
+    );
+    if (!listing) return res.status(404).json({ message: 'Listing not found.' });
+    res.json(listing);
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to approve listing.', error: err.message });
+  }
 });
 
+// Admin-only: includes the full Aadhaar number (decrypted)
+router.get('/users', async (req, res) => {
+  try {
+    const users = await User.find().select('-password +aadhaarEncrypted');
+    res.json(
+      users.map((u) => {
+        const obj = u.toObject();
+        obj.aadhaar = u.aadhaarEncrypted ? decryptAadhaar(u.aadhaarEncrypted) : null;
+        delete obj.aadhaarEncrypted;
+        return obj;
+      })
+    );
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to load users.', error: err.message });
+  }
+});
 // PUT /api/admin/listings/:id/reject
 router.put('/listings/:id/reject', async (req, res) => {
   const { reason } = req.body;

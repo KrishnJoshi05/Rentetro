@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import api from '../api/axios';
 
 const AuthContext = createContext(null);
@@ -6,7 +6,13 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem('rentora_user');
-    return stored ? JSON.parse(stored) : null;
+    if (!stored) return null;
+    try {
+      return JSON.parse(stored);
+    } catch {
+      localStorage.removeItem('rentora_user');
+      return null;
+    }
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -61,12 +67,29 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('rentora_user');
     setUser(null);
   }, []);
+  const updateUser = useCallback((changes) => {
+  setUser((prev) => {
+    const next = { ...prev, ...changes };
+    localStorage.setItem('rentora_user', JSON.stringify(next));
+    return next;
+  });
+}, []);
+
+// On app load, refresh KYC status from the server so a stale saved copy never misleads the UI
+useEffect(() => {
+  if (!localStorage.getItem('rentora_token')) return;
+  api
+    .get('/auth/me')
+    .then(({ data }) => updateUser({ kycStatus: data.kycStatus, aadhaarLast4: data.aadhaarLast4 }))
+    .catch(() => {});
+}, [updateUser]);
 
   return (
     <AuthContext.Provider
-      value={{ user, login, register, logout, verifyEmail, resendVerification, loading, error, needsVerification }}
+      value={{ user, login, register, logout, updateUser, verifyEmail, resendVerification, loading, error, needsVerification }}
     >
       {children}
+      
     </AuthContext.Provider>
   );
 }

@@ -120,7 +120,7 @@ router.post('/login', async (req, res) => {
     const token = signToken(user);
     res.json({
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, kycStatus: user.kycStatus },
     });
   } catch (err) {
     res.status(500).json({ message: 'Login failed.', error: err.message });
@@ -129,8 +129,8 @@ router.post('/login', async (req, res) => {
 
 // GET /api/auth/me
 router.get('/me', authenticate, (req, res) => {
-  const { _id, name, email, role, rating, ratingCount } = req.user;
-  res.json({ id: _id, name, email, role, rating, ratingCount });
+const { _id, name, email, role, rating, ratingCount, kycStatus, aadhaarLast4 } = req.user;
+res.json({ id: _id, name, email, role, rating, ratingCount, kycStatus, aadhaarLast4 });
 });
 
 module.exports = router;

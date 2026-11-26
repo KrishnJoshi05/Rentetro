@@ -35,7 +35,10 @@ export default function ListingDetail() {
       setMessage('Only consumer accounts can book a rental.');
       return;
     }
-
+    if (user.kycStatus !== 'verified') {
+      navigate('/verify-identity');
+      return;
+    }
     setSubmitting(true);
     try {
       await api.post('/bookings', { listingId: id, ...dates });
@@ -46,7 +49,16 @@ export default function ListingDetail() {
       setSubmitting(false);
     }
   };
-
+  const startChat = async () => {
+    if (!user) return navigate('/login');
+    try {
+      const { data } = await api.post('/messages/conversations', { listingId: id });
+      navigate(`/messages/${data.id}`);
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Could not open the chat.');
+    }
+  };
+  
   if (!listing) return <div className="app-shell" style={{ paddingTop: 32 }}>Loading…</div>;
 
   return (
@@ -108,6 +120,11 @@ export default function ListingDetail() {
             {submitting ? 'Requesting…' : 'Request to book'}
           </button>
         </form>
+                {(!user || user.role === 'consumer') && (
+          <button className="btn btn-ghost" type="button" onClick={startChat} style={{ width: '100%', marginTop: 10 }}>
+            Message renter
+          </button>
+        )}
       </div>
     </div>
   );

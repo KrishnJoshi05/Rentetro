@@ -34,4 +34,13 @@ function authorize(...allowedRoles) {
   };
 }
 
-module.exports = { authenticate, authorize };
+
+// Blocks users who haven't completed Aadhaar verification (admins pass through)
+function requireKyc(req, res, next) {
+  if (req.user.role === 'admin' || req.user.kycStatus === 'verified') return next();
+  return res.status(403).json({
+    message: 'Verify your identity with Aadhaar before doing this.',
+    needsKyc: true,
+  });
+}
+module.exports = { authenticate, authorize, requireKyc };

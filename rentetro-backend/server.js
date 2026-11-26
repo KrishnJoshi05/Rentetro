@@ -10,6 +10,8 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const disputeRoutes = require('./routes/disputeRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const kycRoutes = require('./routes/kyc');
+const messageRoutes = require('./routes/messageRoutes');
 
 const app = express();
 
@@ -23,6 +25,8 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/disputes', disputeRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/kyc', kycRoutes);
+app.use('/api/messages', messageRoutes);
 
 app.get('/', (req, res) => {
   res.json({ name: 'Rentora API', status: 'ok', health: '/api/health' });

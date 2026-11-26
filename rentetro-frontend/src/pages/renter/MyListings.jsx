@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 import StatusBadge from '../../components/StatusBadge';
+import { useAuth } from '../../context/AuthContext';
 
 export default function MyListings() {
+  const { user } = useAuth();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +28,11 @@ export default function MyListings() {
     <div className="app-shell" style={{ paddingTop: 32 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <h1>My listings</h1>
+        {user?.kycStatus !== 'verified' && (
+  <div className="card" style={{ marginBottom: 16, borderColor: 'var(--rust-500)' }}>
+    You need to <Link to="/verify-identity">verify your Aadhaar</Link> before you can publish listings.
+  </div>
+)}
         <Link to="/renter/listings/new" className="btn btn-primary">New listing</Link>
       </div>
 

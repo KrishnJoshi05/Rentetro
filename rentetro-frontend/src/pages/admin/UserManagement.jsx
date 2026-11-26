@@ -1,6 +1,24 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axios';
 
+const formatAadhaar = (n) => n.replace(/(\d{4})(?=\d)/g, '$1 ');
+
+const renderAadhaar = (u) => {
+  if (u.role === 'admin') return <span style={{ opacity: 0.5 }}>N/A</span>;
+  if (u.aadhaar) {
+    return <span style={{ fontFamily: 'monospace', letterSpacing: 0.5 }}>{formatAadhaar(u.aadhaar)}</span>;
+  }
+  if (u.aadhaarLast4) {
+    return (
+      <span style={{ fontFamily: 'monospace', letterSpacing: 0.5 }} title="Full number not on file (verified before full numbers were stored)">
+        XXXX XXXX {u.aadhaarLast4}
+      </span>
+    );
+  }
+  if (u.kycStatus === 'pending') return <span style={{ opacity: 0.6 }}>Pending verification</span>;
+  return <span style={{ opacity: 0.5 }}>Not provided</span>;
+};
+
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +53,7 @@ export default function UserManagement() {
             <tr style={{ background: 'var(--ink-100)', textAlign: 'left' }}>
               <th style={{ padding: '10px 16px' }}>Name</th>
               <th style={{ padding: '10px 16px' }}>Email</th>
+              <th style={{ padding: '10px 16px' }}>Aadhaar</th>
               <th style={{ padding: '10px 16px' }}>Role</th>
               <th style={{ padding: '10px 16px' }}>Status</th>
               <th style={{ padding: '10px 16px' }}></th>
@@ -45,6 +64,7 @@ export default function UserManagement() {
               <tr key={u._id} style={{ borderTop: '1px solid var(--ink-100)' }}>
                 <td style={{ padding: '10px 16px' }}>{u.name}</td>
                 <td style={{ padding: '10px 16px' }}>{u.email}</td>
+                <td style={{ padding: '10px 16px', whiteSpace: 'nowrap' }}>{renderAadhaar(u)}</td>
                 <td style={{ padding: '10px 16px', textTransform: 'capitalize' }}>{u.role}</td>
                 <td style={{ padding: '10px 16px', color: u.isSuspended ? 'var(--rust-600)' : 'var(--teal-600)' }}>
                   {u.isSuspended ? 'Suspended' : 'Active'}

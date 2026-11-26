@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const Booking = require('../models/Booking');
 const Listing = require('../models/Listing');
-const { authenticate, authorize } = require('../middleware/auth');
+const { authenticate, authorize, requireKyc } = require('../middleware/auth');
 
 // POST /api/bookings — consumer requests a booking
-router.post('/', authenticate, authorize('consumer'), async (req, res) => {
+router.post('/', authenticate, authorize('consumer'), requireKyc, async (req, res) => {
   try {
     const { listingId, startDate, endDate } = req.body;
     const listing = await Listing.findById(listingId);

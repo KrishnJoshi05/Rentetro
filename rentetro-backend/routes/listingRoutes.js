@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Listing = require('../models/Listing');
-const { authenticate, authorize } = require('../middleware/auth');
-
+const { authenticate, authorize, requireKyc } = require('../middleware/auth');
 // GET /api/listings — public browse, search, filter
 router.get('/', async (req, res) => {
   try {
@@ -43,7 +42,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/listings — renter creates a new listing (goes to pending)
-router.post('/', authenticate, authorize('renter'), async (req, res) => {
+router.post('/', authenticate, authorize('renter'), requireKyc, async (req, res) => {
   try {
     const { title, description, category, images, pricePerDay, depositAmount } = req.body;
 
@@ -74,8 +73,11 @@ router.put('/:id', authenticate, authorize('renter'), async (req, res) => {
     if (req.body[field] !== undefined) listing[field] = req.body[field];
   });
 
-  // Any edit to an approved listing sends it back for re-review — adjust to taste.
-  if (listing.status === 'approved') listing.status = 'pending';
+  // Edits to an existing listing send it back for admin review.
+  if (listing.status !== 'pending') {
+    listing.status = 'pending';
+    listing.rejectionReason = undefined;
+  }
 
   await listing.save();
   res.json(listing);

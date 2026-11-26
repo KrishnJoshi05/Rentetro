@@ -14,8 +14,8 @@ const CATEGORIES = [
 ];
 
 const CATEGORY_VISUALS = {
-  '': { background: 'url(http://www.comproits.com/hardware-rental.php?auto=format&fit=crop&w=400&q=70) center/cover no-repeat' },
-  electronics: { background: 'url(https://cdn-ilakhap.nitrocdn.com/PqSoCHmQkZrBaKjVFQPVQlbtCfaWpWMb/assets/images/optimized/rev-04107a3/rentalmice.com/wp-content/uploads/2024/03/unnamed.png?auto=format&fit=crop&w=400&q=70) center/cover no-repeat' },
+  '': { background: 'url(https://media.licdn.com/dms/image/v2/D4E0BAQExotxnle9wfQ/company-logo_200_200/B4EZWVEhYMHgAI-/0/1741962745984?e=2147483647&v=beta&t=_UynpYtLTvTBTYQilK2hXEjvZZTHZqiSxeRUkuCcb4Q' },
+  electronics: { background: 'url(https://www.eletimes.ai/wp-content/uploads/2024/12/digital_electronics.jpg) center/cover no-repeat'  },
   furniture: { background: 'url(https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=70) center/cover no-repeat' },
   tools: { background: 'url(https://www.dimolanka.com/wp-content/uploads/2022/11/Tools-and-Equipment-Indoor-1200x630-1.jpg?auto=format&fit=crop&w=400&q=70) center/cover no-repeat' },
   outdoor: { background: 'url(https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=400&q=70) center/cover no-repeat' },
